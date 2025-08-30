@@ -1,7 +1,6 @@
-import express from 'express';
-import Comment from '../Model/Comments.js';
-import { createCommentSchema, updateCommentSchema } from '../Validation/Commentvalid.js';
-
+const express = require('express');
+const Comment =require( '../Model/Comments.js');
+const { createCommentSchema, updateCommentSchema } =require ( '../Validation/Commentvalid.js');
 const router = express.Router();
 
 

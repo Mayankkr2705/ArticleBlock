@@ -1,4 +1,4 @@
-import Article from '../Model/Article';
+const Article =require('../Model/Article');
 
 export const mustOwnArticle = async (req, res, next) => {
   const { slug } = req.params;

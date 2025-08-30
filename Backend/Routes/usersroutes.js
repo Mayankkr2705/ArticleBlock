@@ -1,7 +1,7 @@
-import express from 'express';
-import bcrypt from 'bcrypt';
-import User from '../Model/User.js';
-import { signupSchema, loginSchema } from '../Validation/Authvalid.js';
+const express=require('express');
+const bcrypt = require('bcryptjs');
+const User =require('../Model/User.js');
+const { signupSchema, loginSchema } =require('../Validation/Authvalid.js');
 
 const router = express.Router();
 

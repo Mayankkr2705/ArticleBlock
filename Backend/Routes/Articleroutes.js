@@ -1,10 +1,10 @@
-import { Router } from 'express';
-import Article from '../Model/Article.js';
-import { mustOwnArticle } from '../Middleware/Ownership.js';
-import { requireAuth } from '../Middleware/Auth.js';
-import { createArticleSchema, updateArticleSchema } from '../Validation/Articlevalid.js';
+const express=require('express');
+const Article =require('../Model/Article.js');
+const { mustOwnArticle } =require('../Middleware/Ownership.js');
+const { requireAuth }=require('../Middleware/Auth.js');
+const { createArticleSchema, updateArticleSchema } =require('../Validation/Articlevalid.js');
 
-const router = Router();
+const router = express.Router();
 
 // Create
 router.post('/', requireAuth, async (req, res) => {

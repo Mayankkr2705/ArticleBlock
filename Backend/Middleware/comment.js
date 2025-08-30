@@ -1,5 +1,4 @@
-
-import Comment from '../Model/Comments.js'; 
+const Comment =require('../Model/Comments.js'); 
 
 export async function mustOwnComment(req, res, next) {
   const { id } = req.params;
