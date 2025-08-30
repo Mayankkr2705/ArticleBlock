@@ -1,0 +1,15 @@
+import { Schema, model } from 'mongoose';
+
+const ArticleSchema = new Schema(
+  {
+    title: { type: String, required: true, trim: true },
+    slug: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
+    contentHtml: { type: String, required: true }, // from TinyMCE
+    featuredImage: { type: String }, 
+    status: { type: String, enum: ['draft','published'], default: 'draft', index: true },
+    ownerId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+  },
+  { timestamps: true }
+);
+
+export default model('Article', ArticleSchema);
