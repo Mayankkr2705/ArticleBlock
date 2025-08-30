@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const articleRoutes =require( './Routes/Articleroutes.js');
-const authRoutes =require( './Routes/Authroutes.js');
-const commentRoutes =require( './Routes/Commentroutes.js');
+const authRoutes =require( './Routes/usersroutes.js');
+const commentRoutes =require( './Routes/commentsroutes.js');
 
 
 const app = express();

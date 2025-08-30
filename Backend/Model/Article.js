@@ -13,4 +13,4 @@ const ArticleSchema = new Schema(
   { timestamps: true }
 );
 
-export default model('Article', ArticleSchema);
+module.exports = mongoose.model('Article', ArticleSchema);

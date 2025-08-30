@@ -1,11 +1,13 @@
-import { z } from 'zod';
+const { z } = require('zod');
 
-export const createCommentSchema = z.object({
+const createCommentSchema = z.object({
   articleId: z.string().min(1),
   content: z.string().min(1).max(2000),
   parentId: z.string().optional(),
 });
 
-export const updateCommentSchema = z.object({
+const updateCommentSchema = z.object({
   content: z.string().min(1).max(2000),
 });
+
+module.exports = { createCommentSchema, updateCommentSchema };

@@ -18,4 +18,4 @@ const CommentSchema = new Schema(
 CommentSchema.index({ articleId: 1, createdAt: -1 }); // paginate comments for an article
 CommentSchema.index({ articleId: 1, parentId: 1, createdAt: 1 }); // fetch a thread in order
 
-export default model('Comment', CommentSchema);
+module.exports = mongoose.model('Comment', CommentSchema);

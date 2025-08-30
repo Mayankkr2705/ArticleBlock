@@ -1,6 +1,6 @@
-const Article =require('../Model/Article');
+const Article = require('../Model/Article');
 
-export const mustOwnArticle = async (req, res, next) => {
+const mustOwnArticle = async (req, res, next) => {
   const { slug } = req.params;
   const article = await Article.findOne({ slug }).select('owner');
   if (!article) return res.status(404).json({ message: 'Not found' });
@@ -9,3 +9,5 @@ export const mustOwnArticle = async (req, res, next) => {
   }
   next();
 };
+
+module.exports = { mustOwnArticle };

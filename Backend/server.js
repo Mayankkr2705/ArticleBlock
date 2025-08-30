@@ -1,10 +1,13 @@
 require('dotenv').config();
 
-const { connectDB }=require('../Db/databse.js');
-const app =require( './app.js');
+const mongoose = require('mongoose');
 
+const app =require( './app.js');
 const port = process.env.PORT || 4000;
 
-await connectDB(process.env.MONGO_URI);
+mongoose.connect(process.env.MONGO_ID)
+.then(() => console.log('MongoDB connected successfully.'))
+.catch(err => console.log('MongoDB connection error:', err));
+
 app.listen(port, () => console.log(`API listening on :${port}`));
 

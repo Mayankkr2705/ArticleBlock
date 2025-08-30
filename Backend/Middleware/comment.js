@@ -1,6 +1,6 @@
-const Comment =require('../Model/Comments.js'); 
+const Comment = require('../Model/Comments.js');
 
-export async function mustOwnComment(req, res, next) {
+async function mustOwnComment(req, res, next) {
   const { id } = req.params;
   const c = await Comment.findById(id).select('authorId');
   if (!c) {
@@ -11,3 +11,5 @@ export async function mustOwnComment(req, res, next) {
   }
   next();
 }
+
+module.exports = { mustOwnComment };
