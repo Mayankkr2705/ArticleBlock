@@ -18,6 +18,7 @@ router.post('/', requireAuth, async (req, res) => {
     const article = await Article.create({ ...data, owner: req.user.id });
     return res.status(201).json(article);
   } catch (err) {
+    console.error(err);
     return res.status(500).json({ error: 'server error' });
   }
 });
@@ -29,6 +30,7 @@ router.get('/:slug', async (req, res) => {
     if (!doc) return res.sendStatus(404);
     return res.json(doc);
   } catch (err) {
+    console.error(err);
     return res.status(500).json({ error: 'server error' });
   }
 });
@@ -46,6 +48,7 @@ router.put('/:slug', requireAuth, mustOwnArticle, async (req, res) => {
     if (!doc) return res.sendStatus(404);
     return res.json(doc);
   } catch (err) {
+    console.error(err);
     return res.status(500).json({ error: 'server error' });
   }
 });
@@ -56,6 +59,7 @@ router.delete('/:slug', requireAuth, mustOwnArticle, async (req, res) => {
     await Article.findOneAndDelete({ slug: req.params.slug });
     return res.sendStatus(204);
   } catch (err) {
+    console.error(err);
     return res.status(500).json({ error: 'server error' });
   }
 });

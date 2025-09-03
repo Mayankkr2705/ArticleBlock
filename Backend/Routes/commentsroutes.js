@@ -22,6 +22,7 @@ router.post('/', async (req, res) => {
 		}
 		return res.status(201).json(comment);
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ error: 'server error' });
 	}
 });
@@ -48,6 +49,7 @@ router.get('/article/:articleId', async (req, res) => {
 
 		return res.json({ items, total, page, limit, hasMore: skip + items.length < total });
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ error: 'server error' });
 	}
 });
@@ -58,6 +60,7 @@ router.get('/:id/replies', async (req, res) => {
 		const replies = await Comment.find({ parentId: req.params.id, deletedAt: null }).sort({ createdAt: 1 }).lean();
 		return res.json(replies);
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ error: 'server error' });
 	}
 });
@@ -77,6 +80,7 @@ router.put('/:id', async (req, res) => {
 		if (!updated) return res.status(404).json({ error: 'not found' });
 		return res.json(updated);
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ error: 'server error' });
 	}
 });
@@ -96,6 +100,7 @@ router.delete('/:id', async (req, res) => {
 		}
 		return res.status(204).end();
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ error: 'server error' });
 	}
 });

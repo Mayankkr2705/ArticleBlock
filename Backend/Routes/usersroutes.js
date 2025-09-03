@@ -8,10 +8,11 @@ const router = express.Router();
 // POST /api/users/register
 router.post('/register', async (req, res) => {
 	try {
+		console.log(req.body);
 		// validate input
 		const parsed = signupSchema.safeParse(req.body);
 		if (!parsed.success) {
-			const messages = parsed.error.errors.map(e => e.message);
+			const messages = parsed.error?.errors.map(e => e.message);
 			return res.status(400).json({ error: messages });
 		}
 		const { email, username, password, avatarUrl } = parsed.data;
@@ -25,6 +26,7 @@ router.post('/register', async (req, res) => {
 		delete u.password;
 		return res.status(201).json(u);
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ error: 'server error' });
 	}
 });
@@ -50,6 +52,7 @@ router.post('/login', async (req, res) => {
 		delete u.password;
 		return res.json(u);
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ error: 'server error' });
 	}
 });
@@ -61,6 +64,7 @@ router.get('/:id', async (req, res) => {
 		if (!user) return res.status(404).json({ error: 'not found' });
 		return res.json(user);
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ error: 'server error' });
 	}
 });
@@ -80,6 +84,7 @@ router.put('/:id', async (req, res) => {
 		if (!user) return res.status(404).json({ error: 'not found' });
 		return res.json(user);
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ error: 'server error' });
 	}
 });
