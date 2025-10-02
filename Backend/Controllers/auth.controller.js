@@ -25,21 +25,19 @@ const sanitizeUser = (user) => {
 
 const registeruser = async (req, res) => {
   try {
-    console.log(req.body);
-    const validation = validateRequest(signupSchema, req.body);
-    if (!validation.isValid) {
-      return res.status(400).json({ error: validation.errors });
-    }
-
-    const { email, username, password, avatarUrl } = validation.data;
+    const { email, username, password} = req.body;
+    console.log(email, username, password);
 
     const existing = await User.findOne({ $or: [{ email }, { username }] });
+    console.log(existing);
+    
     if (existing) {
+      console.log('Email or username already in use');
       return res.status(409).json({ error: 'Email or username already in use' });
     }
 
     const hashed = await bcrypt.hash(password, 10);
-    const user = await User.create({ email, username, password: hashed, avatarUrl });
+    const user = await User.create({ email, username, password: hashed, avatarUrl: "hello" });
     
     return res.status(201).json(sanitizeUser(user));
   } catch (err) {
@@ -49,20 +47,22 @@ const registeruser = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const validation = validateRequest(loginSchema, req.body);
-    if (!validation.isValid) {
-      return res.status(400).json({ error: validation.errors });
-    }
+    // const validation = validateRequest(loginSchema, req.body);
+    // if (!validation.isValid) {
+    //   return res.status(400).json({ error: validation.errors });
+    // }
 
-    const { email, password } = validation.data;
+    const { email, password } = req.body;
 
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('User not found');
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
+      console.log('Invalid password');  
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
@@ -107,9 +107,22 @@ const getuser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
     if (!user) {
+      console.log('User not found');
       return res.status(404).json({ error: 'User not found' });
     }
     return res.json(user);
+  } catch (err) {
+    return handleError(res, err);
+  }
+};
+
+const deleteuser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    return res.status(204).send();
   } catch (err) {
     return handleError(res, err);
   }

@@ -18,13 +18,12 @@ const handleError = (res, err, message = 'Server error') => {
 
 const createComment = async (req, res) => {
   try {
-    const validation = validateRequest(createCommentSchema, req.body);
-    if (!validation.isValid) {
-      return res.status(400).json({ error: validation.errors });
-    }
+    // const validation = validateRequest(createCommentSchema, req.body);
+    // if (!validation.isValid) {
+    //   return res.status(400).json({ error: validation.errors });
+    // }
 
-    const { articleId, content, parentId = undefined } = validation.data;
-    const { authorId } = req.body;
+    const { articleId, content, authorId, parentId = undefined } = req.body;
     if (!authorId) {
       return res.status(400).json({ error: 'authorId is required' });
     }
@@ -84,6 +83,9 @@ const getCommentReplies = async (req, res) => {
       parentId: req.params.id, 
       deletedAt: null 
     }).sort({ createdAt: 1 }).lean();
+    if (!replies) {
+      return res.status(404).json({ error: 'No replies found' });
+    }
     
     return res.json(replies);
   } catch (err) {
@@ -93,12 +95,12 @@ const getCommentReplies = async (req, res) => {
 
 const updateComment = async (req, res) => {
   try {
-    const validation = validateRequest(updateCommentSchema, req.body);
-    if (!validation.isValid) {
-      return res.status(400).json({ error: validation.errors });
-    }
+    // const validation = validateRequest(updateCommentSchema, req.body);
+    // if (!validation.isValid) {
+    //   return res.status(400).json({ error: validation.errors });
+    // }
 
-    const { content } = validation.data;
+    const { content } = req.body;
     const updated = await Comment.findByIdAndUpdate(
       req.params.id, 
       { content, isEdited: true }, 
@@ -106,6 +108,7 @@ const updateComment = async (req, res) => {
     );
 
     if (!updated) {
+      console.log('Comment not found for update:', req.params.id);
       return res.status(404).json({ error: 'Comment not found' });
     }
     

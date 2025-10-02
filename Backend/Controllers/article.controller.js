@@ -18,14 +18,11 @@ const handleError = (res, err, message = 'Server error') => {
 
 const createArticle = async (req, res) => {
   try {
-    const validation = validateRequest(createArticleSchema, req.body);
-    if (!validation.isValid) {
-      return res.status(400).json({ error: validation.errors });
-    }
+    const data = req.body;
 
     const article = await Article.create({ 
-      ...validation.data, 
-      owner: req.user.id 
+      ...data, 
+      ownerId: req.user.id  
     });
     return res.status(201).json(article);
 
@@ -33,6 +30,7 @@ const createArticle = async (req, res) => {
     return handleError(res, err);
   }
 };
+
 
 const getArticleBySlug = async (req, res) => {
   try {
@@ -48,18 +46,19 @@ const getArticleBySlug = async (req, res) => {
 
 const updateArticle = async (req, res) => {
   try {
-    const validation = validateRequest(updateArticleSchema, req.body);
-    if (!validation.isValid) {
-      return res.status(400).json({ error: validation.errors });
-    }
+    // const validation = validateRequest(updateArticleSchema, req.body);
+    // if (!validation.isValid) {
+    //   return res.status(400).json({ error: validation.errors });
+    // }
 
     const article = await Article.findOneAndUpdate(
       { slug: req.params.slug }, 
-      validation.data, 
+      req.body, 
       { new: true, runValidators: true }
     );
     
     if (!article) {
+      console.log('Article not found for update');
       return res.status(404).json({ error: 'Article not found' });
     }
     return res.json(article);
@@ -72,6 +71,7 @@ const deleteArticle = async (req, res) => {
   try {
     const article = await Article.findOneAndDelete({ slug: req.params.slug });
     if (!article) {
+      console.log('Article not found for deletion');
       return res.status(404).json({ error: 'Article not found' });
     }
     return res.status(204).send();
