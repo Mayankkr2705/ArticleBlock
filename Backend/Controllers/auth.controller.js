@@ -1,16 +1,6 @@
 const bcrypt = require('bcryptjs');
 const User = require('../Model/User.js');
-const { signupSchema, loginSchema } = require('../Validation/Authvalid.js');
-
-// Helper function for validation
-const validateRequest = (schema, data) => {
-  const parsed = schema.safeParse(data);
-  if (!parsed.success) {
-    const messages = parsed.error.errors.map(e => e.message);
-    return { isValid: false, errors: messages };
-  }
-  return { isValid: true, data: parsed.data };
-};
+const jwt = require('jsonwebtoken');
 // Helper function for error responses
 const handleError = (res, err, message = 'Server error') => {
   console.error(err);
@@ -47,10 +37,6 @@ const registeruser = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    // const validation = validateRequest(loginSchema, req.body);
-    // if (!validation.isValid) {
-    //   return res.status(400).json({ error: validation.errors });
-    // }
 
     const { email, password } = req.body;
 
@@ -65,8 +51,14 @@ const login = async (req, res) => {
       console.log('Invalid password');  
       return res.status(400).json({ error: 'Invalid credentials' });
     }
+    //creating token
+    const token = jwt.sign(
+      { sub: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
 
-    return res.json(sanitizeUser(user));
+    return res.json({ user: sanitizeUser(user), token });
   } catch (err) {
     return handleError(res, err);
   }
@@ -116,21 +108,15 @@ const getuser = async (req, res) => {
   }
 };
 
-const deleteuser = async (req, res) => {
-  try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    return res.status(204).send();
-  } catch (err) {
-    return handleError(res, err);
-  }
+const logout = (req, res) => {
+  return res.json({ message: 'Logout successful' });
 };
+
 
 module.exports = {
   registeruser,
   login,
   updateuser,
-  getuser
+  getuser,
+  logout
 };

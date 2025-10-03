@@ -1,15 +1,4 @@
 const Comment = require('../Model/Comments.js');
-const { createCommentSchema, updateCommentSchema } = require('../Validation/Commentvalid.js');
-
-// Helper function for validation
-const validateRequest = (schema, data) => {
-  const parsed = schema.safeParse(data);
-  if (!parsed.success) {
-    const messages = parsed.error.errors.map(e => e.message);
-    return { isValid: false, errors: messages };
-  }
-  return { isValid: true, data: parsed.data };
-};
 // Helper function for error responses
 const handleError = (res, err, message = 'Server error') => {
   console.error(err);
@@ -18,11 +7,6 @@ const handleError = (res, err, message = 'Server error') => {
 
 const createComment = async (req, res) => {
   try {
-    // const validation = validateRequest(createCommentSchema, req.body);
-    // if (!validation.isValid) {
-    //   return res.status(400).json({ error: validation.errors });
-    // }
-
     const { articleId, content, authorId, parentId = undefined } = req.body;
     if (!authorId) {
       return res.status(400).json({ error: 'authorId is required' });
@@ -95,11 +79,7 @@ const getCommentReplies = async (req, res) => {
 
 const updateComment = async (req, res) => {
   try {
-    // const validation = validateRequest(updateCommentSchema, req.body);
-    // if (!validation.isValid) {
-    //   return res.status(400).json({ error: validation.errors });
-    // }
-
+  
     const { content } = req.body;
     const updated = await Comment.findByIdAndUpdate(
       req.params.id, 
