@@ -1,46 +1,74 @@
-import React, { useState } from "react";
-import { login as authlogin } from "../Store/AuthSlice";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import  Button from './Button'
-import  Input  from './Input'
-import  Logo from "./Logo";
-import { useDispatch } from "react-redux";
-import authserve from "../api/auth"; // changed path
+import Button from './Button';
+import Input from './Input';
+import Logo from "./Logo";
+import {login as LoginAPI} from "../api/api";
 import { useForm } from "react-hook-form";
 
-function Login() {
+export function Login() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
   const [error, seterror] = useState("");
 
   const onSubmit = async (data) => {
     seterror("");
     try {
-      const user = await authserve.login(data);
-      if (user) {
-        dispatch(authlogin(user));
+      const res = await LoginAPI(data);
+      const {user, token} = res.data;
+      if (user && token) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
         navigate("/");
       }
     } catch (e) {
-      seterror(e?.response?.data?.message || e.message);
+      seterror(e?.response?.data?.error || e.message);
     }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="flex justify-center mb-4">
-          <Logo />
+    <div className='flex items-center justify-center w-full'>
+      <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
+        <div className="mb-2 flex justify-center">
+          <span className="inline-block w-full max-w-[100px]">
+            <Logo width="100%" />
+          </span>
         </div>
-        <Input label="Email" type="email" {...register("email", { required: true })} />
-        <Input label="Password" type="password" {...register("password", { required: true })} />
-        <Button type="submit" className="w-full bg-primary text-white py-2 rounded hover:bg-primary-dark transition">Sign In</Button>
-        <p className="text-gray-600 text-center">
-          Don't have any account? <Link to="/signup" className="text-primary font-semibold hover:underline">Sign Up</Link>
+        <h2 className="text-center text-2xl font-bold leading-tight">Sign in to your account</h2>
+        <p className="mt-2 text-center text-base text-black/60">
+          Don&apos;t have any account?&nbsp;
+          <Link
+            to="/signup"
+            className="font-medium text-primary transition-all duration-200 hover:underline"
+          >
+            Sign Up
+          </Link>
         </p>
-        {error && <p className="text-red-600 text-center">{error}</p>}
-      </form>
+        {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+        <form onSubmit={handleSubmit(onSubmit)} className='mt-8'>
+          <div className='space-y-5'>
+            <Input
+              label="Email: "
+              placeholder="Enter your email"
+              type="email"
+              {...register("email", {
+                required: true,
+                validate: {
+                  matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                    "Email address must be a valid address",
+                }
+              })}
+            />
+            <Input
+              label="Password: "
+              type="password"
+              placeholder="Enter your password"
+              {...register("password", { required: true })}
+            />
+            <Button type="submit" className="w-full">Sign in</Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

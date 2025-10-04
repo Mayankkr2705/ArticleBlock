@@ -21,6 +21,14 @@ const createArticle = async (req, res) => {
   }
 };
 
+const getAllArticles = async (req, res) => {
+  try {
+    const articles = await Article.find({});
+    return res.json(articles);
+  } catch (err) {
+    return handleError(res, err);
+  }
+};
 
 const getArticleBySlug = async (req, res) => {
   try {
@@ -68,6 +76,7 @@ const deleteArticle = async (req, res) => {
 
 module.exports = {
   createArticle,
+  getAllArticles,
   getArticleBySlug,
   updateArticle,
   deleteArticle
