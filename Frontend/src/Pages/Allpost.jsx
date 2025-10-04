@@ -1,19 +1,63 @@
 import React, { useState, useEffect } from 'react'
-import service from "../api/posts";
+import{getAllArticles} from '../api/api'
 import  Container  from '../Components/Container/Container'
 import  PostCard  from '../Components/PostCard';
 
 function Allpost() {
     const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);  
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        service.getPosts([]).then((posts) => {
-            if (posts) {
-                setPosts(posts.documents);
-            }
-        });
+    fetchPosts();
+
     }, []);
 
+    const fetchPosts = async () => {
+      try {
+        setLoading(true);
+        const response = await getAllArticles(); 
+        
+        if (response && response.data) {
+          setPosts(response.data); 
+        }
+      } catch (err) {
+        console.error('Error fetching posts:', err);
+        setError('Failed to load posts. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (loading) {
+    return (
+      <div className="w-full py-8">
+        <Container>
+          <div className="flex flex-wrap">
+            <div className="p-2 w-full text-center">
+              <h1 className="text-2xl font-bold hover:text-gray-500">
+                Loading posts...
+              </h1>
+            </div>
+          </div>
+        </Container>
+      </div>
+    );
+    }
+    if (error) {
+    return (
+      <div className="w-full py-8">
+        <Container>
+          <div className="flex flex-wrap">
+            <div className="p-2 w-full text-center">
+              <h1 className="text-2xl font-bold text-red-600">
+                {error}
+              </h1>
+            </div>
+          </div>
+        </Container>
+      </div>
+    );
+    }
     // If no posts are found, display a message
     if (posts.length === 0) {
         return (
@@ -21,7 +65,7 @@ function Allpost() {
                 <Container>
                     <div className="flex flex-wrap">
                         <div className="p-2 w-full">
-                            <h1 className="text-2xl font-bold text-gray-700"> {/* Adjusted text color for better readability */}
+                            <h1 className="text-2xl font-bold text-gray-700"> 
                                 No posts available yet.
                             </h1>
                             <p className="text-lg text-gray-500 mt-2">

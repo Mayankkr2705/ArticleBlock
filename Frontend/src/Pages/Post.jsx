@@ -1,36 +1,90 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import service from "../api/posts";
+import{deleteArticle,getArticleBySlug} from '../api/api'
 import  Container from '../Components/Container/Container'
 import  Button  from '../Components/Button'; 
 import parse from "html-react-parser";
-import { useSelector } from "react-redux";
+
 
 export default function Post() {
     const [post, setPost] = useState(null);
     const { slug } = useParams();
+    const [loading, setLoading] = useState(true);  
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const userData = useSelector((state) => state.auth.userData);
-    const isAuthor = post && userData ? post.userId === userData.$id : false;
+   
+    const userData=JSON.parse(localStorage.getItem("user"));
+    const isAuthor = post && userData && post.ownerId === userData._id;
 
-    useEffect(() => {
-        if (slug) {
-            service.getPost(slug).then((post) => {
-                if (post) setPost(post);
-                else navigate("/");
-            });
-        } else navigate("/");
-    }, [slug, navigate]);
 
-    const deletePost = () => {
-        service.deletePost(post.$id).then((status) => {
-            if (status) {
-                service.deleteFile(post.featuredImage);
-                navigate("/");
-            }
-        });
+    const fetchPost = async () => {
+      if (slug) {
+        try {
+          setLoading(true);
+          const response = await getArticleBySlug(slug); 
+          
+          if (response && response.data) {
+            setPost(response.data);  
+          } else {
+            navigate("/");
+          }
+        } catch (err) {
+          console.error('Error fetching post:', err);
+          setError('Failed to load post');
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        navigate("/");
+      }
     };
 
+    useEffect(() => {
+        fetchPost();
+    }, [slug, navigate]);
+
+
+    const deletePost = async () => {
+        if (!post || !window.confirm('Are you sure you want to delete this post?')) {
+            return;
+        }
+
+        try {
+          const response = await deleteArticle(post.slug); 
+        
+          if (response) {
+            navigate("/");
+          }
+        } catch (err) {
+          console.error('Error deleting article:', err);
+          alert('Failed to delete article. Please try again.');
+        }
+    };
+    if (loading) {
+    return (
+      <div className="py-8">
+        <Container>
+          <div className="w-full text-center">
+            <h1 className="text-2xl font-bold">Loading...</h1>
+          </div>
+        </Container>
+      </div>
+    );
+    }  
+    if (error) {
+    return (
+      <div className="py-8">
+        <Container>
+          <div className="w-full text-center">
+            <h1 className="text-2xl font-bold text-red-600">{error}</h1>
+            <Button onClick={() => navigate("/")} className="mt-4">
+              Go Home
+            </Button>
+          </div>
+        </Container>
+      </div>
+    );
+    }
     return post ? (
         <div className="py-8">
             <Container>
