@@ -1,14 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import{logout as apiLogout} from '../../api/api';
+import { useAuth } from "../../context/AuthContext";
 
 
 function Logoutbtn() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const logouthandler = () => {
-    apiLogout(); 
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
+    logout();
     navigate('/login');
   };
 
@@ -23,3 +22,4 @@ function Logoutbtn() {
 }
 
 export default Logoutbtn;
+

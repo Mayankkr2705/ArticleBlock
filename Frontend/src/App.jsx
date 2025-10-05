@@ -1,47 +1,34 @@
-import { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { Routes, Route } from 'react-router-dom'
-
-import authserve from './api/auth'
-import { login, logout } from './Store/AuthSlice'
-import Header from './Components/Header/Header'
-import Footer from './Components/Footer/Footer'
-import { Outlet } from 'react-router-dom'
-import Login from './Components/Login';
-import Signup from './Pages/Signup';
-
+import { useState, useEffect } from 'react';
+import Header from './Components/Header/Header';
+import Footer from './Components/Footer/Footer';
+import { Outlet } from 'react-router-dom';
 
 function App() {
-  const [loading, setLoading] = useState(true)
-  const dispatch = useDispatch()
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    authserve.getCurrentUser()
-      .then((userData) => {
-        if (userData) {
-          dispatch(login(userData))
-        } else {
-          dispatch(logout())
-        }
-      })
-      .finally(() => setLoading(false))
-  }, [])
+    const checkAuth = () => {
+      const token = localStorage.getItem('token');
+      const user = localStorage.getItem('user');
+      setLoading(false);
+    };
+
+    checkAuth();
+  }, []);
 
   return !loading ? (
-    <div className='min-h-screen flex flex-wrap content-between bg-gray-400'>
-      <div className='w-full block'>
-        <Header />
-        <main>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="*" element={<Outlet />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+    <div className="min-h-screen flex flex-col bg-gray-400">
+      <Header />
+      <main className="flex-grow">
+        <Outlet />  
+      </main>
+      <Footer />
     </div>
-  ) : null
+  ) : (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  );
 }
 
-export default App
+export default App;

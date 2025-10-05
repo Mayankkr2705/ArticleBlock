@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { updateArticle,createArticle } from "../api/api";
 
 
-
 function Postform({ post }) {
   const { register, handleSubmit, watch, setValue, control } = useForm({
     defaultValues: {
@@ -54,8 +53,12 @@ function Postform({ post }) {
   };
 
   const slugTransform = useCallback((value) => {
-    if (value && typeof value === "string")
-      return value.trim().toLowerCase().replace(/[^a-zA-Z\d\s]+/g, "-").replace(/\s/g, "-");
+    if (value && typeof value === "string") {
+      return value
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-zA-Z\d]+/g, "-");
+    }
     return "";
   }, []);
 
@@ -70,20 +73,52 @@ function Postform({ post }) {
   }, [watch, slugTransform, setValue]);
 
   return (
-    <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
-        <Input label="Title" {...register("title", { required: true })} />
-        <Input label="Slug" {...register("slug", { required: true })} />
-        <RTE name="content" control={control} defaultValue={post?.content} />
+    <form onSubmit={handleSubmit(submit)} className="flex flex-wrap bg-gray-100 p-4 rounded-lg shadow-md">
+      <div className="w-full lg:w-2/3 px-2 space-y-4">
+        <Input
+          label="Title :"
+          placeholder="Title"
+          className="mb-4"
+          {...register("title", { required: true })}
+        />
+        <Input
+          label="Slug :"
+          placeholder="Slug"
+          className="mb-4"
+          {...register("slug", { required: true })}
+          onInput={(e) => {
+            setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
+          }}
+        />
+        <RTE label="Content :" name="content" control={control} defaultValue={post?.content} />
+      </div>
+      <div className="w-full lg:w-1/3 px-2 space-y-4 mt-4 lg:mt-0">
+        <Input
+          label="Featured Image :"
+          type="file"
+          className="mb-4"
+          accept="image/png, image/jpg, image/jpeg, image/gif"
+          {...register("image")}
+        />
+        {post && post.image && (
+          <div className="w-full mb-4">
+            <img
+              src={post.image}
+              alt={post.title}
+              className="rounded-lg"
+            />
+          </div>
+        )}
         <Select
-          label="Status"
-          options={[
-            { value: "active", label: "Active" },
-            { value: "inactive", label: "Inactive" },
-            ]}
-           {...register("status", { required: true })}
-          />
-          <Input type="file" label="Featured Image" accept="image/*" {...register("image")} />
-          <Button type="submit">{post ? "Update" : "Create"} Post</Button>
+          options={[{value: "active", label: "Active"}, {value: "inactive", label: "Inactive"}]}
+          label="Status :"
+          className="mb-4"
+          {...register("status", { required: true })}
+        />
+        <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
+          {post ? "Update" : "Submit"}
+        </Button>
+      </div>
     </form>
   );
 }

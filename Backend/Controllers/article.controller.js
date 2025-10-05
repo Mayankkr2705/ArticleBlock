@@ -11,8 +11,7 @@ const createArticle = async (req, res) => {
     const data = req.body;
 
     const article = await Article.create({ 
-      ...data, 
-      ownerId: req.user.id  
+      ...data   
     });
     return res.status(201).json(article);
 

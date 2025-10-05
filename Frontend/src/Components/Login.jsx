@@ -1,24 +1,25 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { login as LoginAPI } from "../api/api";
+import { useAuth } from "../context/AuthContext";
 import Button from './Button';
 import Input from './Input';
 import Logo from "./Logo";
-import {login as LoginAPI} from "../api/api";
-import { useForm } from "react-hook-form";
 
 export function Login() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const [error, seterror] = useState("");
+  const { login } = useAuth(); 
 
   const onSubmit = async (data) => {
     seterror("");
     try {
       const res = await LoginAPI(data);
-      const {user, token} = res.data;
+      const { user, token } = res.data;
       if (user && token) {
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
+        login(user, token);
         navigate("/");
       }
     } catch (e) {

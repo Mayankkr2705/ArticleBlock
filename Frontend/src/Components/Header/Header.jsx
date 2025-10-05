@@ -1,27 +1,14 @@
-import React,{useState,useEffect} from 'react';
+import React from 'react';
 import Logo from "../Logo";
 import Logoutbtn from './Logoutbtn';
 import Container from '../Container/Container';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 function Header() {
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);  
-
-  // CHECK AUTHENTICATION FROM LOCALSTORAGE
-  useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem('token');
-      const user = localStorage.getItem('user');
-      setIsAuthenticated(!!(token && user));  
-    };
-
-    checkAuth();
-  
-    window.addEventListener('storage', checkAuth);
-    return () => window.removeEventListener('storage', checkAuth);
-  }, []);
+  const { isAuthenticated } = useAuth();
 
   const navitems = [
     { name: 'Home', slug: "/", active: true },
