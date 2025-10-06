@@ -25,9 +25,11 @@ function Postform({ post }) {
       
       if (post) {
         const file = data.image?.[0] || null;
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
         const response = await updateArticle(post.slug || post.$id, {
           ...data,
           image: file,
+          ownerId: user._id || user.$id,
         });
         dbPost = response.data;
 

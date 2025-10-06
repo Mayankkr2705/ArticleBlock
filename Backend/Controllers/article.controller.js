@@ -9,7 +9,7 @@ const handleError = (res, err, message = 'Server error') => {
 const createArticle = async (req, res) => {
   try {
     const data = req.body;
-
+    console.log('Creating article with data:', data);
     const article = await Article.create({ 
       ...data   
     });
