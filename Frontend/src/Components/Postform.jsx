@@ -33,7 +33,7 @@ function Postform({ post }) {
         });
         dbPost = response.data;
 
-        if (dbPost) navigate(`/article/${dbPost.slug}`);
+        if (dbPost) navigate(`/post/${dbPost.slug}`);
       } else {
   
         const file = data.image?.[0] || null;
@@ -46,7 +46,7 @@ function Postform({ post }) {
         });
         dbPost = response.data;
 
-        if (dbPost) navigate(`/article/${dbPost.slug}`);
+        if (dbPost) navigate(`/post/${dbPost.slug}`);
       }
     } catch (error) {
       console.error('Error submitting post:', error);
