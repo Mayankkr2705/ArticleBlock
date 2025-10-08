@@ -22,27 +22,46 @@ function Postform({ post }) {
   const submit = async (data) => {
     try {
       let dbPost;
-      
+      let imageUrl = post?.image || ""; 
+
+      const file = data.image?.[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+        
+        const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+        const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error("Image upload failed");
+        }
+
+        const uploadData = await uploadResponse.json();
+        imageUrl = uploadData.secure_url;
+      }
+
       if (post) {
-        const file = data.image?.[0] || null;
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         const response = await updateArticle(post.slug || post.$id, {
           ...data,
-          image: file,
+          image: imageUrl,
           ownerId: user._id || user.$id,
         });
         dbPost = response.data;
 
         if (dbPost) navigate(`/post/${dbPost.slug}`);
       } else {
-  
-        const file = data.image?.[0] || null;
+
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         
         const response = await createArticle({
           ...data,
           ownerId: user._id || user.$id, 
-          image: file,
+          image: imageUrl,
         });
         dbPost = response.data;
 
@@ -50,7 +69,6 @@ function Postform({ post }) {
       }
     } catch (error) {
       console.error('Error submitting post:', error);
-      
     }
   };
 

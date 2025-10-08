@@ -22,10 +22,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
-          <Route path="all-posts" element={<Allpost />} />
-          <Route path="edit-post/:slug" element={<Editpost />} />
-          <Route path="post/:slug" element={<Post />} />
-          <Route path="/add-post" element={<Addpost />} />
+          <Route path="all-article" element={<Allpost />} />
+          <Route path="edit-article/:slug" element={<Editpost />} />
+          <Route path="article/:slug" element={<Post />} />
+          <Route path="/add-article" element={<Addpost />} />
         </Route>
       </Routes>
     </AuthProvider>

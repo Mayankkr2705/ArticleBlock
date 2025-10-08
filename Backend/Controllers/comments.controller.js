@@ -45,7 +45,12 @@ const getCommentsByArticle = async (req, res) => {
 
     const query = { articleId, parentId: null, deletedAt: null };
     const [items, total] = await Promise.all([
-      Comment.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+      Comment.find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .populate('authorId', 'username') // Populate author's username
+        .lean(),
       Comment.countDocuments(query),
     ]);
 

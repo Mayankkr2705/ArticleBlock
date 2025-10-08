@@ -14,8 +14,8 @@ function Header() {
     { name: 'Home', slug: "/", active: true },
     { name: "Login", slug: "/login", active: !isAuthenticated },
     { name: "Signup", slug: "/signup", active: !isAuthenticated },
-    { name: "All Posts", slug: "/all-posts", active: isAuthenticated },
-    { name: "Add Post", slug: "/add-post", active: isAuthenticated },
+    { name: "All Posts", slug: "/all-article", active: isAuthenticated },
+    { name: "Add Post", slug: "/add-article", active: isAuthenticated },
   ];
 
   return (
