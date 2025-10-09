@@ -57,11 +57,11 @@ export default function Post() {
         fetchPost();
     }, [slug, navigate]);
 
-useEffect(() => {
+    useEffect(() => {
   if (post?._id) fetchComments(post._id);
-}, [post]);
+    }, [post]);
 
-const handleAddComment = async () => {
+    const handleAddComment = async () => {
   if (!commentText.trim()) return;
   if (!userData || !userData._id) {
     alert('Please sign in to add a comment.');
@@ -79,7 +79,7 @@ const handleAddComment = async () => {
     console.error('Error creating comment:', err);
     alert('Failed to add comment. Please try again.');
   }
-};
+    };
     const deletePost = async () => {
         if (!post || !window.confirm('Are you sure you want to delete this article?')) {
             return;
@@ -164,10 +164,10 @@ const handleAddComment = async () => {
                     {/* Article Card */}
                     <article className="bg-white rounded-2xl shadow-xl overflow-hidden">
                         {/* Featured Image Section */}
-                        {post.featuredImage && (
+                        {post.image && (
                             <div className="relative w-full h-96 bg-gradient-to-br from-blue-100 to-purple-100 overflow-hidden">
                                 <img
-                                    src={post.featuredImage}
+                                    src={post.image}
                                     alt={post.title}
                                     className="w-full h-full object-cover"
                                 />

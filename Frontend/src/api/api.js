@@ -55,6 +55,25 @@ export const deleteComment=async(id)=>{
 
 //articles
 
+export const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+    
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!uploadResponse.ok) {
+      throw new Error("Image upload failed");
+    }
+
+    const uploadData = await uploadResponse.json();
+    return uploadData.secure_url;
+}
+
 export const createArticle=async(data)=>{
     return api.post(`/api/articles/create`,data);
 }

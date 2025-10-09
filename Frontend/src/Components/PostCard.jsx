@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 function PostCard({ _id, slug, title, content, image, createdAt, ownerId, author, tags, readTime }) {
   const linkPath = slug ? `/article/${slug}` : `/article/${_id}`;
+  console.log(image);
   
   const truncatedContent = content 
     ? content.replace(/<[^>]*>/g, '')

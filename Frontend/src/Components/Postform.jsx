@@ -5,7 +5,7 @@ import Input from "./Input";
 import Select from "./Select";
 import RTE from "./RTE";
 import { useNavigate } from "react-router-dom";
-import { updateArticle,createArticle } from "../api/api";
+import { updateArticle,createArticle, uploadImage } from "../api/api";
 
 
 function Postform({ post }) {
@@ -26,22 +26,7 @@ function Postform({ post }) {
 
       const file = data.image?.[0];
       if (file) {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
-        
-        const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-        const uploadResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!uploadResponse.ok) {
-          throw new Error("Image upload failed");
-        }
-
-        const uploadData = await uploadResponse.json();
-        imageUrl = uploadData.secure_url;
+        imageUrl = await uploadImage(file);
       }
 
       if (post) {
@@ -65,7 +50,7 @@ function Postform({ post }) {
         });
         dbPost = response.data;
 
-        if (dbPost) navigate(`/post/${dbPost.slug}`);
+        if (dbPost) navigate(`/Article/${dbPost.slug}`);
       }
     } catch (error) {
       console.error('Error submitting post:', error);
@@ -142,5 +127,6 @@ function Postform({ post }) {
     </form>
   );
 }
+
 
 export default Postform;
