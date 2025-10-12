@@ -1,9 +1,8 @@
 import React from 'react';
-import Logo from "../Logo";
+import Logo from '../Logo';
 import Logoutbtn from './Logoutbtn';
 import Container from '../Container/Container';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 function Header() {
@@ -11,34 +10,37 @@ function Header() {
   const { isAuthenticated } = useAuth();
 
   const navitems = [
-    { name: 'Home', slug: "/", active: true },
-    { name: "Login", slug: "/login", active: !isAuthenticated },
-    { name: "Signup", slug: "/signup", active: !isAuthenticated },
-    { name: "All Posts", slug: "/all-article", active: isAuthenticated },
-    { name: "Add Post", slug: "/add-article", active: isAuthenticated },
+    { name: 'Home', slug: '/', active: true },
+    { name: 'Login', slug: '/login', active: !isAuthenticated },
+    { name: 'Signup', slug: '/signup', active: !isAuthenticated },
+    { name: 'All Posts', slug: '/all-article', active: isAuthenticated },
+    { name: 'Add Post', slug: '/add-article', active: isAuthenticated },
   ];
 
   return (
-    <header className='py-1 shadow-md bg-gray-700 text-white'>
-      <Container  className="h-xl">
-        <nav className='flex  items-center'>
-          <div className='mr-4'>
-            <Link to='/' className='w-24 h-16 flex items-center'>
-              <Logo />
+    <header className="sticky top-0 z-40 shadow-lg bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 text-white">
+      <Container>
+        <nav className="flex items-center h-20">
+          {/* Logo */}
+          <div className="mr-6 flex items-center">
+            <Link to="/" className="w-32 h-16 flex items-center">
+              <Logo width={110} />
             </Link>
           </div>
-          <ul className='flex ml-auto space-x-4'>
-            {navitems.map((item) =>
-              item.active ? (
-                <li key={item.name}>
-                  <button
-                    onClick={() => navigate(item.slug)}
-                    className='inline-block px-4 py-2 duration-200 hover:bg-gray-600 rounded-full'
-                  >
-                    {item.name}
-                  </button>
-                </li>
-              ) : null
+          {/* Navigation */}
+          <ul className="flex ml-auto items-center space-x-4">
+            {navitems.map(
+              (item) =>
+                item.active && (
+                  <li key={item.name}>
+                    <button
+                      onClick={() => navigate(item.slug)}
+                      className="inline-block px-5 py-2 rounded-full font-semibold transition-colors bg-white/10 hover:bg-blue-700/70 hover:text-white active:scale-95 shadow-sm"
+                    >
+                      {item.name}
+                    </button>
+                  </li>
+                )
             )}
             {isAuthenticated && (
               <li>
@@ -48,6 +50,8 @@ function Header() {
           </ul>
         </nav>
       </Container>
+      {/* Subtle bottom border effect */}
+      <div className="h-[2px] w-full bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-500 opacity-30" />
     </header>
   );
 }
