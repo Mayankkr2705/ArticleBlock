@@ -97,7 +97,7 @@ function Home() {
             <h1 className="text-4xl font-bold text-gray-900 mb-4">No Articles Yet</h1>
             <p className="text-xl text-gray-600 mb-8">Be the first to share your thoughts and create an article!</p>
             <Link
-              to="/add-post"
+              to="/add-article"
               className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:shadow-2xl transition-all duration-200 transform hover:scale-105"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
