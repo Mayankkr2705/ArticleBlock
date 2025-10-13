@@ -39,8 +39,8 @@ function Allpost() {
             <div className="w-4 h-4 bg-purple-600 rounded-full"></div>
             <div className="w-4 h-4 bg-pink-600 rounded-full"></div>
           </div>
-          <h1 className="text-2xl font-bold text-gray-700">Loading Posts…</h1>
-          <p className="text-gray-500">Please wait while we fetch the latest posts.</p>
+          <h1 className="text-2xl font-bold text-gray-700">Loading Articles…</h1>
+          <p className="text-gray-500">Please wait while we fetch the latest articles.</p>
         </div>
       </div>
     );
@@ -74,10 +74,10 @@ function Allpost() {
               No posts available yet.
             </h1>
             <p className="text-lg text-gray-600 mb-8">
-              Check back later or be the first to create a post!
+              Check back later or be the first to create a Article!
             </p>
             <Link
-              to="/add-post"
+              to="/add-article"
               className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105"
             >
               Create Post
