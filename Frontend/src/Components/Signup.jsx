@@ -6,7 +6,7 @@ import Logo from "./Logo";
 import { useForm } from "react-hook-form";
 
 const Signup = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -15,6 +15,7 @@ const Signup = () => {
     setError("");
     setSuccess("");
     try {
+      console.log(data);
       await signupAPI(data);
       setSuccess("Account created successfully! Redirecting to login...");
       setTimeout(() => {
@@ -29,7 +30,7 @@ const Signup = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-blue-100 via-purple-100 to-pink-100">
       <div className="relative mx-auto w-full max-w-lg bg-white/80 backdrop-blur-md rounded-2xl overflow-hidden shadow-2xl border border-white/30 p-10">
         {/* Animated Gradient Blur Accent */}
-        <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-gradient-to-tr from-pink-500 via-fuchsia-500 to-blue-500 blur-2xl opacity-20 pointer-events-none z-0" />
+        <div className="absolute -top-24 -left-24 w-72 h-72 rounded-full bg-gradient-to-tr from-blue-500 via-fuchsia-500 to-pink-500 blur-2xl opacity-20 pointer-events-none z-0" />
         <div className="relative z-10">
           <div className="mb-6 flex justify-center">
             <span className="inline-flex w-[100px]">
@@ -70,8 +71,11 @@ const Signup = () => {
                     type="text"
                     placeholder="Your name"
                     className="flex-1 px-3 py-3 rounded-xl bg-transparent outline-none text-gray-900 placeholder-gray-400"
-                    {...register("name", { required: true })}
+                    {...register("username", { required: true })}
                   />
+                  {errors.username && (
+                    <p className="text-red-600 text-sm mt-2">Name is required.</p>
+                  )}
                 </div>
               </div>
               <div>
@@ -93,6 +97,12 @@ const Signup = () => {
                       pattern: /^\S+@\S+\.\S{2,3}$/,
                     })}
                   />
+                  {errors.email && errors.email.type === 'required' && (
+                    <p className="text-red-600 text-sm mt-2">Email is required.</p>
+                  )}
+                  {errors.email && errors.email.type === 'pattern' && (
+                    <p className="text-red-600 text-sm mt-2">Please enter a valid email address.</p>
+                  )}
                 </div>
               </div>
               <div>
@@ -112,6 +122,12 @@ const Signup = () => {
                     className="flex-1 px-3 py-3 rounded-xl bg-transparent outline-none text-gray-900 placeholder-gray-400"
                     {...register("password", { required: true, minLength: 6 })}
                   />
+                  {errors.password && errors.password.type === 'required' && (
+                    <p className="text-red-600 text-sm mt-2">Password is required.</p>
+                  )}
+                  {errors.password && errors.password.type === 'minLength' && (
+                    <p className="text-red-600 text-sm mt-2">Password must be at least 6 characters.</p>
+                  )}
                 </div>
               </div>
             </div>
